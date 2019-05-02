@@ -67,11 +67,13 @@ install:
 script: |
   set -e
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    #export PYTHONCONFIG="$PYTHONDIR/bin/python-config"
-    export PYTHONCONFIG="python-config"
-    #export LD_LIBRARY_PATH="$PYTHONDIR/lib"
+    export PYTHONCONFIG="$PYTHONDIR/bin/python-config"
+    #export PYTHONCONFIG="python-config"
+    python-config --prefix
+    python-config --ldflags
+    export LD_LIBRARY_PATH="$PYTHONDIR/lib"
     if [[ $PYTHON_DEBUG_BUILD != 1 ]]; then
-      pytest -n4 mypyc mypyc/test/test_external.py -k 'not test_self_type_check'
+      pytest -n4 mypyc/test/test_external.py -k 'not test_self_type_check'
     fi
     if [[ $PYTHON_DEBUG_BUILD == 1 ]]; then
       pytest -n4 mypyc/test/test_run.py mypyc/test/test_external.py -k 'not test_self_type_check'
