@@ -16,14 +16,16 @@ matrix:
       python: "3.6"
     - os: linux
       python: "3.6"
-      env: PYTHON_DEBUG_BUILD=1
+      env:
+        - PYTHON_DEBUG_BUILD=1
+        - PYTHONDIR=~/python-debug/
     - os: linux
       dist: xenial
       python: "3.7"
     - os: linux
       dist: xenial
       python: "3.8-dev"
-#      env: PYTHONCONFIG=/opt/python/3.8-dev/bin/python-config
+      env: PYTHONDIR=/opt/python/3.8-dev/
     - os: osx
       osx_image: xcode8.3
       language: generic
@@ -31,20 +33,13 @@ matrix:
 
 before_install: |
   set -e
-  which python3
-  ls $(dirname $(which python3))
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     export PYTHONVERSION=`python --version | awk '{ print $2 }'`
     export PYTHONDIR=ASDF
 
-    if [[ $PYTHON_DEBUG_BUILD == 1 ]]; then
-      export PYTHONDIR=~/python-debug/python-$PYTHONVERSION
-    else
-      export PYTHONDIR="/opt/python/$PYTHONVERSION"
-    fi
+    export PYTHONDIR=${PYTHONDIR-"/opt/python/$PYTHONVERSION"}
 
     if [[ $PYTHON_DEBUG_BUILD == 1 ]]; then
-      export PYTHONDIR=~/python-debug/python-$PYTHONVERSION
       VENV=$PYTHONDIR/env
       scripts/build-debug-python.sh $PYTHONVERSION $PYTHONDIR $VENV
       source $VENV/bin/activate
@@ -59,8 +54,6 @@ before_install: |
     export PATH="/Users/travis/.pyenv/shims:${PATH}"
   fi
 
-  PYTHONDIR=$(dirname $(dirname $(which python3)))
-
   # Check python install
   which python
   python --version
@@ -74,7 +67,7 @@ install:
 script: |
   set -e
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    export PYTHONCONFIG=${PYTHONCONFIG-"$PYTHONDIR/bin/python-config"}
+    export PYTHONCONFIG="$PYTHONDIR/bin/python-config"
     export LD_LIBRARY_PATH="$PYTHONDIR/lib"
     if [[ $PYTHON_DEBUG_BUILD != 1 ]]; then
       pytest -n4 mypyc
