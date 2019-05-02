@@ -6,30 +6,24 @@ cache:
     - $HOME/.pyenv/versions
     - $HOME/Library/Caches/pip
 
+env: PYTHON_DEBUG_BUILD=0
+
 matrix:
   include:
     - os: linux
-      sudo: false
       python: "3.5"
-      env: PYTHON_DEBUG_BUILD=0
     - os: linux
-      sudo: false
       python: "3.6"
-      env: PYTHON_DEBUG_BUILD=0
     - os: linux
-      sudo: false
       python: "3.6"
       env: PYTHON_DEBUG_BUILD=1
     - os: linux
       dist: xenial
-      sudo: required
       python: "3.7"
-      env: PYTHON_DEBUG_BUILD=0
     - os: linux
       dist: xenial
-      sudo: required
       python: "3.8-dev"
-      env: PYTHON_DEBUG_BUILD=0
+      env: PYTHONCONFIG=python3.8-config
     - os: osx
       osx_image: xcode8.3
       language: generic
@@ -74,7 +68,7 @@ install:
 script: |
   set -e
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    export PYTHONCONFIG="$PYTHONDIR/bin/python-config"
+    export PYTHONCONFIG=${PYTHONCONFIG-"$PYTHONDIR/bin/python-config"}
     export LD_LIBRARY_PATH="$PYTHONDIR/lib"
     if [[ $PYTHON_DEBUG_BUILD != 1 ]]; then
       pytest -n4 mypyc
