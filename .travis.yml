@@ -71,6 +71,8 @@ script: |
     #export PYTHONCONFIG="python-config"
     python-config --prefix
     python-config --ldflags
+    $PYTHONDIR/bin/python-config --ldflags
+    which python-config
     export LD_LIBRARY_PATH="$PYTHONDIR/lib"
     if [[ $PYTHON_DEBUG_BUILD != 1 ]]; then
       pytest -n4 mypyc/test/test_external.py -k 'not test_self_type_check'
