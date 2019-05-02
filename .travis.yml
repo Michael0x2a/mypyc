@@ -23,7 +23,7 @@ matrix:
     - os: linux
       dist: xenial
       python: "3.8-dev"
-      env: PYTHONCONFIG=python3.8-config
+#      env: PYTHONCONFIG=/opt/python/3.8-dev/bin/python-config
     - os: osx
       osx_image: xcode8.3
       language: generic
@@ -35,6 +35,7 @@ before_install: |
   ls $(dirname $(which python3))
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     export PYTHONVERSION=`python --version | awk '{ print $2 }'`
+    export PYTHONDIR=ASDF
 
     if [[ $PYTHON_DEBUG_BUILD == 1 ]]; then
       export PYTHONDIR=~/python-debug/python-$PYTHONVERSION
@@ -43,6 +44,7 @@ before_install: |
     fi
 
     if [[ $PYTHON_DEBUG_BUILD == 1 ]]; then
+      export PYTHONDIR=~/python-debug/python-$PYTHONVERSION
       VENV=$PYTHONDIR/env
       scripts/build-debug-python.sh $PYTHONVERSION $PYTHONDIR $VENV
       source $VENV/bin/activate
@@ -56,6 +58,8 @@ before_install: |
     export PYENV_VERSION=$PYTHONVERSION
     export PATH="/Users/travis/.pyenv/shims:${PATH}"
   fi
+
+  PYTHONDIR=$(dirname $(dirname $(which python3)))
 
   # Check python install
   which python
