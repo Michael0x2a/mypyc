@@ -73,7 +73,7 @@ script: |
   set -e
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     export PYTHONCONFIG="$PYTHONDIR/bin/python-config"
-#    export PYTHONCONFIG="$PYTHONDIR/bin/python3-config"
+    #export PYTHONCONFIG="$PYTHONDIR/bin/python3-config"
     export PYTHONCONFIG="python-config"
     #export PYTHONCONFIG="python-config"
     python-config --prefix

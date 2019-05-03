@@ -5,7 +5,7 @@
 all: test_capi
 
 OS := $(shell uname)
-PYTHONCONFIG ?= python3-config
+PYTHONCONFIG ?= python-config
 
 CFLAGS += -I ../../external/googletest -I ../../external/googletest/include -std=c++11
 
