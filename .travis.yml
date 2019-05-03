@@ -25,7 +25,12 @@ matrix:
     - os: linux
       dist: xenial
       python: "3.8-dev"
-      env: PYTHONDIR=/opt/python/3.8-dev/
+      env:
+        - PYTHONDIR=/opt/python/3.8-dev/
+        # For reasons I do not begin to understand, python-config is
+        # leaving this off on travis.
+#        - LDFLAGS=-lpython3.8
+        - LDFLAGS=-L/opt/python/3.8-dev/lib
     - os: osx
       osx_image: xcode8.3
       language: generic
@@ -68,7 +73,8 @@ script: |
   set -e
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     export PYTHONCONFIG="$PYTHONDIR/bin/python-config"
-    export PYTHONCONFIG="$PYTHONDIR/bin/python3-config"
+#    export PYTHONCONFIG="$PYTHONDIR/bin/python3-config"
+    export PYTHONCONFIG="python-config"
     #export PYTHONCONFIG="python-config"
     python-config --prefix
     python-config --ldflags
