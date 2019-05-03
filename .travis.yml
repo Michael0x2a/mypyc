@@ -68,9 +68,11 @@ script: |
   set -e
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     export PYTHONCONFIG="$PYTHONDIR/bin/python-config"
+    export PYTHONCONFIG="$PYTHONDIR/bin/python3-config"
     #export PYTHONCONFIG="python-config"
     python-config --prefix
     python-config --ldflags
+    python3-config --ldflags
     $PYTHONDIR/bin/python-config --ldflags
     which python-config
     export LD_LIBRARY_PATH="$PYTHONDIR/lib"
